@@ -1,0 +1,45 @@
+/ Home page
+Name of website / home button
+	when clicked birngs to home page
+catagories button
+	-> opens a categories menu
+		-> searches DB for said category and lists all items that fit found category
+about section
+	-> about section
+search bar
+	-> searches in the database for an item and makes a list of all the items with the same name/category
+	-> allow user to search by user
+		-> searches for user in BD
+			-> if found, return all said users available items for sale
+cart and number of items in cart
+	Check if user has added an item to the cart and save said items
+		-> make a cart template
+			-> let user decide if he wanna add multiple items or remove from cart
+		-> if user is ready, move to the payment template
+			-> payment template for adding billing/delivery info
+wishlist button
+	-> shows all the items the user has added to their wishlist
+		-> show user if items are on the wishlist (need to check if they're available)
+new listing
+	-> *name, image, description, category and price are required
+	->	let user add the cart or add to wishlist 
+account button / register /login
+	-> account
+		-> show button only if user is logged in
+			-> show user their profile
+				-> update button
+					-> allows user to update their info
+						-> check if info in DB, if taken, flash a danger message.
+					-> update user info
+					-> update picture
+					-> update email
+				-> show all listing by user 	
+logout
+
+items menu with pictures and prices
+moderation menu if user is mod
+	-> allows mod to delete, modify or update listings 
+
+page numbers scroller
+	-> shows number of pages and lets user move between them
+

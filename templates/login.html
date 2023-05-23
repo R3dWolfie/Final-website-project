@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+
+{% block title %}Login - My Marketplace{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>Login</h1>
+        <form method="POST" action="{{ url_for('login') }}" class="login-form">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required class="form-control">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Login</button>
+                <a href="{{ url_for('forgot_password') }}" class="btn btn-link">Forgot Password</a>
+            </div>
+        </form>
+    </div>
+    {% if error_message %}
+    <script>
+        // Scroll to the error message section
+        window.scrollTo(0, document.body.scrollHeight);
+    </script>
+    {% endif %}
+{% endblock %}

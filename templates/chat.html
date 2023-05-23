@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+
+{% block title %}Reset Password - My Marketplace{% endblock %}
+
+{% block content %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/chat.css') }}">
+    <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+</head>
+<body>
+    <h1>Chat</h1>
+    <div id="chat-container">
+        <div id="chat-messages"></div>
+        <form id="chat-form">
+            <input type="text" id="chat-input" placeholder="Type your message...">
+            <button type="submit">Send</button>
+        </form>
+    </div>
+
+    <div id="seller-info">
+        <h2>Contact Seller</h2>
+        <form id="message-form">
+            <textarea id="message-input" placeholder="Type your message..."></textarea>
+            <button type="submit">Send Message</button>
+        </form>
+    </div>
+</body>
+</html>
+{% endblock %}

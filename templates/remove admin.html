@@ -1,0 +1,19 @@
+{% extends 'layout.html' %}
+
+{% block title %}Remove Admin - My Marketplace{% endblock %}
+
+{% block content %}
+    <h1>Remove Admin</h1>
+
+    <form action="{{ url_for('remove_admin') }}" method="POST">
+        <div class="form-group">
+            <label for="admin-select">Select Admin User</label>
+            <select class="form-control" id="admin-select" name="admin_id" required>
+                {% for admin_user in admin_users %}
+                    <option value="{{ admin_user.id }}">{{ admin_user.username }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-danger">Remove Admin</button>
+    </form>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+  <h1>Delete News Article</h1>
+
+  <p>Are you sure you want to delete this news article?</p>
+
+  <form action="{{ url_for('delete_news', news_id=news_article.id) }}" method="POST">
+    <button type="submit">Delete</button>
+  </form>
+{% endblock %}

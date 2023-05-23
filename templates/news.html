@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+
+{% block title %}News - My Marketplace{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="text-center">News</h1>
+
+        {% for news_article in news_articles %}
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">{{ news_article.title }}</h5>
+                    <p class="card-text">{{ news_article.content }}</p>
+                    <p class="card-text">Author: {{ news_article.author.username }}</p>
+
+                    {% if owner or admin %}
+                        <div class="admin-options">
+                            <a href="{{ url_for('edit_news', news_id=news_article.id) }}" class="btn btn-primary">Edit</a>
+                            <a href="{{ url_for('delete_news', news_id=news_article.id) }}" class="btn btn-danger">Delete</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

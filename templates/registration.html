@@ -1,0 +1,30 @@
+{% extends 'layout.html' %}
+
+{% block title %}Registration - My Marketplace{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>Registration</h1>
+        <form method="POST" action="{{ url_for('register') }}" class="registration-form">
+            <div class="form-group">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" required class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" required class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="confirm_password">Confirm Password:</label>
+                <input type="password" id="confirm_password" name="confirm_password" required class="form-control">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Register</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'layout.html' %}
+
+{% block title %}Products - My Marketplace{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="text-center mb-4">Products</h1>
+
+        <div class="row">
+            {% for product in products %}
+                <div class="col-md-4">
+                    <div class="card mb-4">
+                        <img src="{{ url_for('static', filename='pics/'+product.image_file) }}" alt="{{ product.name }}" class="card-img-top product-image">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ product.name }}</h5>
+                            <p class="card-text">Price: ${{ product.price }}</p>
+                            <p class="card-text {% if product.author == current_user %}highlight{% endif %}">Seller: {{ product.author.username }}</p>
+                            <!-- Add more product information or actions as needed -->
+                            {% if admin or product.author == current_user %}
+                                <div class="text-center">
+                                    <a href="{{ url_for('edit_product', item_id=product.id) }}" class="btn btn-primary">Edit Product</a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

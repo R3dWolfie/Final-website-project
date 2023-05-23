@@ -1,0 +1,83 @@
+/* style.css */
+
+/* Reset some default styles */
+body, ul {
+    margin: 0;
+    padding: 0;
+}
+
+/* Header styles */
+header {
+    background-color: #ffffff;
+    padding: 10px;
+}
+
+nav {
+    padding: 0;
+}
+
+nav .navbar-brand {
+    font-weight: bold;
+}
+
+nav .nav-link {
+    color: #333333;
+    transition: color 0.3s ease;
+}
+
+nav .nav-link:hover {
+    color: #007bff;
+}
+
+/* Main content styles */
+main {
+    background-color: #f8f9fa;
+    padding: 20px;
+}
+
+h1, h2, h3 {
+    margin-bottom: 20px;
+}
+
+.product-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.product {
+    background-color: #ffffff;
+    border-radius: none;
+    padding: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.product h3 {
+    margin-bottom: 10px;
+}
+
+.product p {
+    margin-bottom: 10px;
+}
+
+.product a {
+    display: inline-block;
+    color: #000000;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+}
+
+.product-image {
+    object-fit: contain;
+    width: 200px;
+    height: 200px;
+}
+
+/* Footer styles */
+footer {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    padding: 10px;
+    text-align: center;
+}

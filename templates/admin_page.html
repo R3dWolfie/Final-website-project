@@ -1,0 +1,39 @@
+{% extends 'layout.html' %}
+
+{% block title %}Admin Page - My Marketplace{% endblock %}
+
+{% block content %}
+    <h1>Admin Page</h1>
+
+    <h2>Add Admin</h2>
+    <form action="{{ url_for('add_admin') }}" method="POST">
+        <div class="form-group">
+            <label for="admin-select">Select User</label>
+            <select class="form-control" id="admin-select" name="admin_id" required>
+                {% for user in users %}
+                    <option value="{{ user.id }}">{{ user.username }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Admin</button>
+    </form>
+
+    <h2>Manage Admins</h2>
+    <div class="admin-list">
+        <div class="row">
+            {% for admin_user in admin_users %}
+                <div class="col-md-2">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ admin_user.username }}</h5>
+                            <form action="{{ url_for('remove_admin') }}" method="POST">
+                                <input type="hidden" name="admin_id" value="{{ admin_user.id }}">
+                                <button type="submit" class="btn btn-danger">Remove Admin</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
