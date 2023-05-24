@@ -6,25 +6,71 @@
     <div class="container">
         <h1 class="text-center mb-4">Products</h1>
 
-        <div class="row">
-            {% for product in products %}
-                <div class="col-md-4">
-                    <div class="card mb-4">
-                        <img src="{{ url_for('static', filename='pics/'+product.image_file) }}" alt="{{ product.name }}" class="card-img-top product-image">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ product.name }}</h5>
-                            <p class="card-text">Price: ${{ product.price }}</p>
-                            <p class="card-text {% if product.author == current_user %}highlight{% endif %}">Seller: {{ product.author.username }}</p>
-                            <!-- Add more product information or actions as needed -->
-                            {% if admin or product.author == current_user %}
-                                <div class="text-center">
-                                    <a href="{{ url_for('edit_product', item_id=product.id) }}" class="btn btn-primary">Edit Product</a>
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <h2 class="text-center">In Stock</h2>
+                <div class="row">
+                    {% for product in products %}
+                        {% if product.stock > 0 %}
+                            <div class="col-md-4 mb-4">
+                                <div class="card product-card">
+                                    <img src="{{ url_for('static', filename='pics/'+product.image_file) }}" alt="{{ product.name }}" class="card-img-top product-image">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ product.name }}</h5>
+                                        <p class="card-text">{{ product.description }}</p>
+                                        <p class="card-text">Price: ${{ product.price }}</p>
+                                        <p class="card-text">In stock: {{ product.stock }}</p>
+                                        <p class="card-text {% if product.author == current_user %}text-success{% endif %}">Seller: {{ product.author.username }}</p>
+                                        <a href="{{ url_for('product_details', item_id=product.id) }}" class="btn btn-primary btn-block">View Details</a>
+                                        {% if admin or product.author != current_user %}
+                                            <form action="{{ url_for('buy_item', item_id=product.id) }}" method="POST" style="display: inline-block;">
+                                                <input type="hidden" name="_method" value="POST">
+                                                <button type="submit" class="btn btn-success{% if product.stock <= 0 %} disabled{% endif %}" style="width: 100%;">
+                                                    {% if product.stock <= 0 %}
+                                                        Out of Stock
+                                                    {% else %}
+                                                        Buy Now
+                                                    {% endif %}
+                                                </button>
+                                            </form>
+                                        {% else %}
+                                            <a href="{{ url_for('edit_product', item_id=product.id) }}" class="btn btn-outline-primary btn-block">Edit product</a>
+                                        {% endif %}
+                                    </div>
                                 </div>
-                            {% endif %}
-                        </div>
-                    </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
                 </div>
-            {% endfor %}
+            </div>
+        </div>
+
+        <hr> <!-- Add a horizontal line to separate the sections -->
+
+        <div class="row justify-content-center">
+            <div class="col-md-12">
+                <h2 class="text-center">Out of Stock</h2>
+                <div class="row">
+                    {% for product in products %}
+                        {% if product.stock <= 0 %}
+                            <div class="col-md-4 mb-4">
+                                <div class="card product-card">
+                                    <img src="{{ url_for('static', filename='pics/'+product.image_file) }}" alt="{{ product.name }}" class="card-img-top product-image">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ product.name }}</h5>
+                                        <p class="card-text">{{ product.description }}</p>
+                                        <p class="card-text">Price: ${{ product.price }}</p>
+                                        <p class="card-text">In stock: {{ product.stock }}</p>
+                                        <p class="card-text {% if product.author == current_user %}text-success{% endif %}">Seller: {{ product.author.username }}</p>
+                                        <a href="{{ url_for('product_details', item_id=product.id) }}" class="btn btn-primary btn-block">View Details</a>
+                                        <button class="btn btn-secondary btn-block disabled" style="width: 100%;">Out of Stock</button>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}

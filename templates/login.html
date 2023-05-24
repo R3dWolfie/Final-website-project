@@ -15,6 +15,12 @@
                 <input type="password" id="password" name="password" required class="form-control">
             </div>
             <div class="form-group">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="remember" name="remember">
+                    <label class="form-check-label" for="remember">Remember Me</label>
+                </div>
+            </div>
+            <div class="form-group">
                 <button type="submit" class="btn btn-primary">Login</button>
                 <a href="{{ url_for('forgot_password') }}" class="btn btn-link">Forgot Password</a>
             </div>

@@ -23,6 +23,18 @@
                                     <input type="hidden" name="_method" value="DELETE">
                                     <button type="submit" class="btn btn-danger">Delete</button>
                                 </form>
+                                {% if product.stock > 0 %}
+                                    <form action="{{ url_for('buy_item', item_id=product.id) }}" method="POST" style="display: inline-block;">
+                                        <input type="hidden" name="_method" value="PUT">
+                                        <button type="submit" class="btn btn-success{% if product.stock <= 0 %} disabled{% endif %}">
+                                            {% if product.stock <= 0 %}
+                                                Out of Stock
+                                            {% else %}
+                                                Buy Now
+                                            {% endif %}
+                                        </button>
+                                    </form>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

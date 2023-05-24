@@ -68,6 +68,11 @@ h1, h2, h3 {
     text-decoration: none;
 }
 
+.product button.btn-success {
+    width: 100%;
+    font-size: 16px; /* Adjust the font size as desired */
+}
+
 .product-image {
     object-fit: contain;
     width: 200px;
@@ -80,4 +85,9 @@ footer {
     color: #6c757d;
     padding: 10px;
     text-align: center;
+}
+
+.btn-success {
+    background-color: #28a745;
+    border-color: #28a745;
 }
