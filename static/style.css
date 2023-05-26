@@ -8,7 +8,6 @@ body, ul {
 
 /* Header styles */
 header {
-    background-color: #ffffff;
     padding: 10px;
 }
 
@@ -31,7 +30,6 @@ nav .nav-link:hover {
 
 /* Main content styles */
 main {
-    background-color: #f8f9fa;
     padding: 20px;
 }
 
@@ -46,7 +44,6 @@ h1, h2, h3 {
 }
 
 .product {
-    background-color: #ffffff;
     border-radius: none;
     padding: none;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -81,8 +78,6 @@ h1, h2, h3 {
 
 /* Footer styles */
 footer {
-    background-color: #f8f9fa;
-    color: #6c757d;
     padding: 10px;
     text-align: center;
 }
@@ -90,4 +85,16 @@ footer {
 .btn-success {
     background-color: #28a745;
     border-color: #28a745;
+}
+
+* {
+    font-weight: bolder;
+}
+
+label {
+    color: white;
+}
+
+h1 {
+    color: white;
 }

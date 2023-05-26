@@ -4,26 +4,26 @@
 
 {% block content %}
     <div class="container">
-        <h1>Registration</h1>
+        <h1 class="fw-bold text-light mb-2">Registration</h1>
         <form method="POST" action="{{ url_for('register') }}" class="registration-form">
-            <div class="form-group">
+            <div class="form-group mb-2">
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" required class="form-control">
             </div>
-            <div class="form-group">
+            <div class="form-group mb-2">
                 <label for="email">Email:</label>
                 <input type="email" id="email" name="email" required class="form-control">
             </div>
-            <div class="form-group">
+            <div class="form-group mb-2">
                 <label for="password">Password:</label>
                 <input type="password" id="password" name="password" required class="form-control">
             </div>
-            <div class="form-group">
+            <div class="form-group mb-2">
                 <label for="confirm_password">Confirm Password:</label>
                 <input type="password" id="confirm_password" name="confirm_password" required class="form-control">
             </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">Register</button>
+            <div class="form-group mb-2">
+                <button type="submit" class="btn btn-primary fw-bold"><i class="fa-solid fa-user me-2"></i>Register</button>
             </div>
         </form>
     </div>
