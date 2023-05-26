@@ -18,7 +18,7 @@ from wtforms.validators import DataRequired, Email, EqualTo
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.db'
 app.config['SECRET_KEY'] = '5791628bb0b13ce0c676dfde280ba245'
-app.config['UPLOAD_FOLDER'] = '/Users/r3dwolfie/Documents/python things/Final project/static/pics'
+app.config['UPLOAD_FOLDER'] = './static/pics'
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
@@ -37,7 +37,6 @@ db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
-
 
 # Define the Item model
 class Item(db.Model):
@@ -68,6 +67,17 @@ class News(db.Model):
         self.title = title
         self.content = content
         self.author_id = author_id
+
+class Chat(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    target_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+
+    def __init__(self, author, target, content):
+        self.author_id = author
+        self.target_id = target
+        self.content = content
 
 
 def check_user(user):
