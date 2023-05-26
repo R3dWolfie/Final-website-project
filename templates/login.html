@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="container">
-    <h1 class="fw-bold text-light mb-2">Login</h1>
+    <h1 class="fw-bold text-light mb-3">Login</h1>
     <form method="POST" action="{{ url_for('login') }}" class="login-form text-light">
         <div class="form-group  mb-2">
             <label for="username">Username:</label>
@@ -22,14 +22,14 @@
         </div>
         <div class="form-group mb-2">
             <button type="submit" class="btn btn-primary fw-bolder"><i class="fa-solid fa-right-to-bracket me-2"></i>Login</button>
-            <a href="{{ url_for('forgot_password') }}" class="btn btn-link fw-bolder">Forgot Password?</a>
+            <a href="{{ url_for('forgot_password') }}" class="btn btn-link fw-bold">Forgot Password?</a>
         </div>
     </form>
 </div>
     {% with messages = get_flashed_messages() %}
         {% if messages %}
             {% for message in messages %}
-                <p class="fw-bolder text-danger">{{ message }}</p>
+                <p class="fw-bold text-danger">{{ message }}</p>
             {% endfor %}
         {% endif %}
     {% endwith %}
