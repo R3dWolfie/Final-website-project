@@ -1,6 +1,6 @@
 {% extends 'layout.html' %}
 
-{% block title %}Product Details - My Marketplace{% endblock %}
+{% block title %}Product Details{% endblock %}
 
 {% block content %}
     <div class="row">
@@ -20,7 +20,14 @@
                             <h5 class="card-title">Seller</h5>
                             <p class="card-text {% if item.author == current_user %}highlight{% endif %}">{{ item.author.username }}</p>
                             {% if admin or item.author == current_user %}
-                                <a href="{{ url_for('edit_product', item_id=item.id) }}" class="btn btn-primary btn-lg btn-block">Edit product</a>
+                                <a href="{{ url_for('edit_product', item_id=item.id) }}" class="btn btn-primary btn-lg btn-block">Edit Product</a>
+                            {% else %}
+                                <form action="{{ url_for('buy_item', item_id=item.id) }}" method="POST" style="display: inline-block;">
+                                    <input type="hidden" name="_method" value="POST">
+                                    <button type="submit" class="btn btn-success btn-lg btn-block">
+                                        Buy Now
+                                    </button>
+                                </form>
                             {% endif %}
                         </div>
                     </div>

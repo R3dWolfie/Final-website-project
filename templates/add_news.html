@@ -1,4 +1,7 @@
 {% extends 'layout.html' %}
+
+{% block title %}Add News{% endblock %}
+
 {% block content %}
   <h1>Add News</h1>
   <form method="POST" action="{{ url_for('add_news') }}">

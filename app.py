@@ -11,6 +11,7 @@ from itsdangerous import URLSafeTimedSerializer
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from functools import wraps
+from errors.handlers import errors
 
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField
 from wtforms.validators import DataRequired, Email, EqualTo
@@ -30,6 +31,7 @@ app.config['MAIL_DEFAULT_SENDER'] = 'fooferweb@gmail.com'
 mail = Mail(app)
 
 bcrypt = Bcrypt(app)
+app.register_blueprint(errors)
 
 serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
@@ -609,6 +611,10 @@ def manage_products():
 
     return render_template('manage_products.html', products=products)
 
+@app.route('/chat')
+def chat():
+    return render_template('chat.html')
+
 
 if __name__ == '__main__':
-    app.run()
+    app.run(debug=True)
