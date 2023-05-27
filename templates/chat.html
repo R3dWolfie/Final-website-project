@@ -10,21 +10,31 @@
     <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
 </head>
 <body>
-    <h1>Chat</h1>
-    <div id="chat-container">
-        <div id="chat-messages"></div>
-        <form id="chat-form">
-            <input type="text" id="chat-input" placeholder="Type your message...">
-            <button type="submit">Send</button>
-        </form>
-    </div>
-
-    <div id="seller-info">
-        <h2>Contact Seller</h2>
-        <form id="message-form">
-            <textarea id="message-input" placeholder="Type your message..."></textarea>
-            <button type="submit">Send Message</button>
-        </form>
+    <div class="app">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Chats</h2>
+                <button class="new-chat-btn">+</button>
+            </div>
+            <ul class="chat-list">
+                <!-- Chats dynamically populated here -->
+            </ul>
+        </aside>
+        <section class="chat-panel">
+            <header class="chat-header">
+                <h3 class="chat-title">Chat Title</h3>
+                <div class="chat-options">
+                    <button class="chat-option">...</button>
+                </div>
+            </header>
+            <div class="chat-messages">
+                <!-- Chat messages dynamically populated here -->
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="chat-input" placeholder="Type a message..." autocomplete="off">
+                <button id="send-btn">Send</button>
+            </div>
+        </section>
     </div>
 </body>
 </html>

@@ -18,7 +18,7 @@
                             </a>
                             <div class="card-body">
                                 <h3 class="card-title text-center">{{ item.name }}</h3>
-                                <p class="card-text">{{ item.description }}</p>
+                                <p class="card-text">{{ item.description[:30] }}{% if item.description|length > 30 %}... <a href="{{ url_for('product_details', item_id=item.id) }}" class="btn btn-link">See more</a>{% endif %}</p>
                                 <p class="card-text">Price: ${{ item.price }}</p>
                                 <p class="card-text">In stock: {{ item.stock }}</p>
                                 <p class="card-text {% if item.author == current_user %}text-success{% endif %}">Seller: {{ item.author.username }}</p>
@@ -55,7 +55,7 @@
                             </a>
                             <div class="card-body">
                                 <h3 class="card-title text-center">{{ item.name }}</h3>
-                                <p class="card-text">{{ item.description }}</p>
+                                <p class="card-text">{{ item.description[:30] }}{% if item.description|length > 30 %}... <a href="{{ url_for('product_details', item_id=item.id) }}" class="btn btn-link">See more</a>{% endif %}</p>
                                 <p class="card-text">Price: ${{ item.price }}</p>
                                 <p class="card-text">In stock: {{ item.stock }}</p>
                                 <p class="card-text {% if item.author == current_user %}text-success{% endif %}">Seller: {{ item.author.username }}</p>
