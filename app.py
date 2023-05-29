@@ -40,6 +40,7 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 
+
 # Define the Item model
 class Item(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -69,6 +70,7 @@ class News(db.Model):
         self.title = title
         self.content = content
         self.author_id = author_id
+
 
 class Chat(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -610,6 +612,7 @@ def manage_products():
     products = Item.query.all()
 
     return render_template('manage_products.html', products=products)
+
 
 @app.route('/chat')
 def chat():

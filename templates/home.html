@@ -22,21 +22,23 @@
                                 <p class="card-text">Price: ${{ item.price }}</p>
                                 <p class="card-text">In stock: {{ item.stock }}</p>
                                 <p class="card-text {% if item.author == current_user %}text-success{% endif %}">Seller: {{ item.author.username }}</p>
-                                <a href="{{ url_for('product_details', item_id=item.id) }}" class="btn btn-primary btn-block">View Details</a>
-                                {% if item.author != current_user %}
-                                    <form action="{{ url_for('buy_item', item_id=item.id) }}" method="POST" style="display: inline-block;">
-                                        <input type="hidden" name="_method" value="POST">
-                                        <button type="submit" class="btn btn-success{% if item.stock <= 0 %} disabled{% endif %}" style="width: 100%;">
-                                            {% if item.stock <= 0 %}
-                                                Out of Stock
-                                            {% else %}
-                                                Buy Now
-                                            {% endif %}
-                                        </button>
-                                    </form>
-                                {% else %}
-                                    <a href="{{ url_for('edit_product', item_id=item.id) }}" class="btn btn-outline-primary btn-block">Edit product</a>
-                                {% endif %}
+                                <div class="text-center">
+                                    {% if item.author != current_user %}
+                                        <form action="{{ url_for('buy_item', item_id=item.id) }}" method="POST" style="display: inline-block;">
+                                            <input type="hidden" name="_method" value="POST">
+                                            <button type="submit" class="btn btn-success{% if item.stock <= 0 %} disabled{% endif %}">
+                                                {% if item.stock <= 0 %}
+                                                    Out of Stock
+                                                {% else %}
+                                                    Buy Now
+                                                {% endif %}
+                                            </button>
+                                        </form>
+                                    {% else %}
+                                        <a href="{{ url_for('edit_product', item_id=item.id) }}" class="btn btn-outline-primary">Edit product</a>
+                                    {% endif %}
+                                    <a href="{{ url_for('product_details', item_id=item.id) }}" class="btn btn-primary">View Details</a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -59,8 +61,10 @@
                                 <p class="card-text">Price: ${{ item.price }}</p>
                                 <p class="card-text">In stock: {{ item.stock }}</p>
                                 <p class="card-text {% if item.author == current_user %}text-success{% endif %}">Seller: {{ item.author.username }}</p>
-                                <a href="{{ url_for('product_details', item_id=item.id) }}" class="btn btn-primary btn-block">View Details</a>
-                                <button class="btn btn-secondary btn-block disabled mt-2" style="width: 100%;">Out of Stock</button>
+                                <div class="text-center">
+                                    <button class="btn btn-secondary disabled mt-2">Out of Stock</button>
+                                    <a href="{{ url_for('product_details', item_id=item.id) }}" class="btn btn-primary">View Details</a>
+                                </div>
                             </div>
                         </div>
                     </div>
