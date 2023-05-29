@@ -12,6 +12,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from functools import wraps
 from errors.handlers import errors
+from sqlalchemy import func
 
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField
 from wtforms.validators import DataRequired, Email, EqualTo
@@ -399,11 +400,19 @@ def products():
     return render_template('products.html', products=products)
 
 
+from random import sample
+
+
 @app.route('/product/<int:item_id>')
 def product_details(item_id):
     # Retrieve the item from the database by ID
     item = Item.query.get_or_404(item_id)
-    return render_template('product_details.html', item=item)
+
+    # Retrieve 3 random other products
+    other_products = Item.query.filter(Item.id != item_id).all()
+    random_products = sample(other_products, 3)
+
+    return render_template('product_details.html', item=item, random_products=random_products)
 
 
 # ...

@@ -3,34 +3,58 @@
 {% block title %}Product Details{% endblock %}
 
 {% block content %}
-    <div class="row">
-        <div class="col">
-            <h1 class="text-center mb-4">{{ item.name }}</h1>
-            <div class="card bg-dark text-light mb-3">
-                <div class="row g-0">
-                    <div class="col-md-4">
-                        <img src="{{ url_for('static', filename='pics/'+item.image_file) }}" alt="{{ item.name }}" class="img-fluid rounded-start">
-                    </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title">Description</h5>
-                            <p class="card-text">{{ item.description | replace('<br>', '\n') }}</p>
-                            <h5 class="card-title">Price</h5>
-                            <p class="card-text">${{ item.price }}</p>
-                            <h5 class="card-title">Seller</h5>
-                            <p class="card-text {% if item.author == current_user %}highlight{% endif %}">{{ item.author.username }}</p>
-                            {% if admin or item.author == current_user %}
-                                <a href="{{ url_for('edit_product', item_id=item.id) }}" class="btn btn-primary btn-lg btn-block">Edit Product</a>
-                            {% else %}
-                                <form action="{{ url_for('buy_item', item_id=item.id) }}" method="POST" style="display: inline-block;">
-                                    <input type="hidden" name="_method" value="POST">
-                                    <button type="submit" class="btn btn-success btn-lg btn-block">
-                                        Buy Now
-                                    </button>
-                                </form>
-                            {% endif %}
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1 class="text-center mb-4">{{ item.name }}</h1>
+                <div class="card bg-dark text-light mb-3">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <img src="{{ url_for('static', filename='pics/'+item.image_file) }}" alt="{{ item.name }}" class="img-fluid rounded-start">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">Description</h5>
+                                <p class="card-text">{{ item.description | replace('<br>', '\n') }}</p>
+                                <h5 class="card-title">Price</h5>
+                                <p class="card-text">${{ item.price }}</p>
+                                <h5 class="card-title">Seller</h5>
+                                <p class="card-text {% if item.author == current_user %}highlight{% endif %}">{{ item.author.username }}</p>
+                                {% if admin or item.author == current_user %}
+                                    <a href="{{ url_for('edit_product', item_id=item.id) }}" class="btn btn-primary btn-lg btn-block">Edit Product</a>
+                                {% else %}
+                                    <form action="{{ url_for('buy_item', item_id=item.id) }}" method="POST" style="display: inline-block;">
+                                        <input type="hidden" name="_method" value="POST">
+                                        <button type="submit" class="btn btn-success btn-lg btn-block">
+                                            Buy Now
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col">
+                <h3>Other Products</h3>
+                <div class="row">
+                    {% for product in random_products %}
+                    <div class="col-md-4">
+                        <div class="card mb-4 product-card">
+                            <a href="{{ url_for('product_details', item_id=product.id) }}">
+                                <img src="{{ url_for('static', filename='pics/' + product.image_file) }}" alt="{{ product.name }}" class="card-img-top product-image">
+                            </a>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ product.name }}</h5>
+                                <p class="card-text">${{ product.price }}</p>
+                                <a href="{{ url_for('product_details', item_id=product.id) }}" class="btn btn-primary">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
