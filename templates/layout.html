@@ -40,6 +40,7 @@
                             <a class="nav-link text-light" href="{{ url_for('products') }}"><i
                                     class="fa-solid fa-box me-2"></i>Products</a>
                         </li>
+                        {% if admin or owner %}
                         <li class="nav-item dropdown">
                             <button class="nav-link dropdown-toggle btn btn-link text-light" type="button"
                                 id="managementDropdown" data-bs-toggle="dropdown" aria-haspopup="true"
@@ -47,7 +48,6 @@
                                 Management
                             </button>
                             <ul class="dropdown-menu">
-                                {% if admin or owner %}
                                 <li>
                                     <a class="dropdown-item" href="{{ url_for('manage_products') }}">Manage Products</a>
                                 </li>
