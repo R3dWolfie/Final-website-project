@@ -21,7 +21,8 @@
     <header>
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container">
-                <a class="navbar-brand" href="{{ url_for('home') }}"><img src="/static/pics/icon.png" class="img-fluid me-2" style="height: 35px; width: 35px"/>Red's</a>
+                <a class="navbar-brand" href="{{ url_for('home') }}"><img src="/static/pics/icon.png"
+                        class="img-fluid me-2" style="height: 35px; width: 35px" />Red's</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -33,7 +34,8 @@
                                     class="fa-solid fa-house me-2"></i>Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-light" href="{{ url_for('products') }}"><i class="fa-solid fa-box me-2"></i>Products</a>
+                            <a class="nav-link text-light" href="{{ url_for('products') }}"><i
+                                    class="fa-solid fa-box me-2"></i>Products</a>
                         </li>
                         <li class="nav-item dropdown">
                             <button class="nav-link dropdown-toggle btn btn-link text-light" type="button"
@@ -41,15 +43,20 @@
                                 aria-expanded="false">
                                 Management
                             </button>
-                            <div class="dropdown-menu" aria-labelledby="managementDropdown">
+                            <ul class="dropdown-menu">
                                 {% if admin or owner %}
-                                <a class="dropdown-item" href="{{ url_for('manage_products') }}">Manage Products</a>
-                                <a class="dropdown-item" href="{{ url_for('add_news') }}">Add News</a>
+                                <li>
+                                    <a class="dropdown-item" href="{{ url_for('manage_products') }}">Manage Products</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="{{ url_for('add_news') }}">Add News</a>
+                                </li>
                                 {% endif %}
                                 {% if owner %}
-                                <a class="dropdown-item" href="{{ url_for('admin_page') }}">Admin Management</a>
+                                <li> <a class="dropdown-item" href="{{ url_for('admin_page') }}">Admin Management</a>
+                                </li>
                                 {% endif %}
-                            </div>
+                            </ul>
                         </li>
                     </ul>
                     <ul class="navbar-nav ms-auto">

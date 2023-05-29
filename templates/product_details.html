@@ -15,7 +15,7 @@
                         <div class="col-md-8">
                             <div class="card-body">
                                 <h5 class="card-title">Description</h5>
-                                <p class="card-text">{{ item.description | replace('<br>', '\n') }}</p>
+                                <p class="card-text">{{ item.description | replace('\n', '<br>') | safe }}</p>
                                 <h5 class="card-title">Price</h5>
                                 <p class="card-text">${{ item.price }}</p>
                                 <h5 class="card-title">Seller</h5>
