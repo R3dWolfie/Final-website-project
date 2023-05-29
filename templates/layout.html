@@ -28,7 +28,22 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
-
+                        <li class="nav-item dropdown">
+                            <button class="nav-link dropdown-toggle btn btn-link text-light" type="button"
+                                id="managementDropdown" data-bs-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false">
+                                Management
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="managementDropdown">
+                                {% if admin or owner %}
+                                <a class="dropdown-item" href="{{ url_for('manage_products') }}">Manage Products</a>
+                                <a class="dropdown-item" href="{{ url_for('add_news') }}">Add News</a>
+                                {% endif %}
+                                {% if owner %}
+                                <a class="dropdown-item" href="{{ url_for('admin_page') }}">Admin Management</a>
+                                {% endif %}
+                            </div>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link text-light" href="{{ url_for('home') }}"><i
                                     class="fa-solid fa-house me-2"></i>Home</a>
