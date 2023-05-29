@@ -28,6 +28,13 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link text-light" href="{{ url_for('home') }}"><i
+                                    class="fa-solid fa-house me-2"></i>Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" href="{{ url_for('products') }}"><i class="fa-solid fa-box me-2"></i>Products</a>
+                        </li>
                         <li class="nav-item dropdown">
                             <button class="nav-link dropdown-toggle btn btn-link text-light" type="button"
                                 id="managementDropdown" data-bs-toggle="dropdown" aria-haspopup="true"
@@ -43,13 +50,6 @@
                                 <a class="dropdown-item" href="{{ url_for('admin_page') }}">Admin Management</a>
                                 {% endif %}
                             </div>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" href="{{ url_for('home') }}"><i
-                                    class="fa-solid fa-house me-2"></i>Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-light" href="{{ url_for('products') }}"><i class="fa-solid fa-box me-2"></i>Products</a>
                         </li>
                     </ul>
                     <ul class="navbar-nav ms-auto">
