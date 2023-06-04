@@ -712,9 +712,10 @@ def sales_report():
     return response
 
 
-@app.route('/chat')
-def chat():
-    return render_template('chat.html')
+@app.route('/chat/<username>')
+def chat(username):
+
+    return render_template('chat.html', target_user=username)
 
 
 if __name__ == '__main__':

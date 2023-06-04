@@ -4,38 +4,43 @@
 
 {% block content %}
 <html>
+
 <head>
     <title>Chat</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/chat.css') }}">
     <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
 </head>
+
 <body>
     <div class="app">
         <aside class="sidebar">
             <div class="sidebar-header">
-                <h2>Chats</h2>
-                <button class="new-chat-btn">+</button>
+                <h2>Chats with <span class="text-primary">{{ target_user}}</span></h2>
             </div>
             <ul class="chat-list">
                 <!-- Chats dynamically populated here -->
             </ul>
         </aside>
         <section class="chat-panel">
-            <header class="chat-header">
+            <!--   <header class="chat-header">
                 <h3 class="chat-title">Chat Title</h3>
-                <div class="chat-options">
-                    <button class="chat-option">...</button>
-                </div>
-            </header>
+            </header> -->
             <div class="chat-messages">
                 <!-- Chat messages dynamically populated here -->
             </div>
-            <div class="chat-input-area">
-                <input type="text" id="chat-input" placeholder="Type a message..." autocomplete="off">
-                <button id="send-btn">Send</button>
+            <div class="chat-input-area w-100 container-fluid">
+                <form>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="chat-input" placeholder="Type a message..."
+                            autocomplete="off">
+                        <button id="send-btn" class="btn btn-primary fw-bold"><i
+                                class="fa-solid fa-paper-plane me-2"></i>Send</button>
+                    </div>
+                </form>
             </div>
         </section>
     </div>
 </body>
+
 </html>
 {% endblock %}
