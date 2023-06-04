@@ -68,16 +68,16 @@
                     <ul class="navbar-nav ms-auto">
                         {% if current_user.is_authenticated %}
                         <li class="nav-item">
-                            <a href="{{ url_for('add_item') }}" class="btn btn-primary text-light">Add Item</a>
+                            <a href="{{ url_for('add_item') }}" class="btn btn-primary fw-bold text-light me-2"><i class="fa-solid fa-plus me-2"></i>Add Item</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url_for('profile') }}" class="nav-link text-light">Profile</a>
+                            <a href="{{ url_for('profile') }}" class="nav-link text-light"><i class="fa-solid fa-user me-2"></i>Profile</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url_for('logout') }}" class="nav-link text-light">Logout</a>
+                            <a href="{{ url_for('logout') }}" class="nav-link text-light"><i class="fa-solid fa-right-from-bracket me-2"></i>Logout</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url_for('news') }}" class="nav-link text-light">News</a>
+                            <a href="{{ url_for('news') }}" class="nav-link text-light"><i class="fa-solid fa-newspaper me-2"></i>News</a>
                         </li>
                         {% else %}
                         <li class="nav-item">

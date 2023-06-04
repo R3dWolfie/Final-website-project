@@ -285,12 +285,18 @@ def register():
             return render_template('registration.html', error_message=error_message)
 
         new_user = User(username=username, password=password, email=email)
+
         db.session.add(new_user)
+
         send_user_created_email(email)
+
         db.session.commit()
+
         login_user(new_user)
+
         flash("Registration successful!", 'success')
-        return redirect(url_for('home'))
+
+        return redirect(url_for('login'))
 
     return render_template('registration.html')
 

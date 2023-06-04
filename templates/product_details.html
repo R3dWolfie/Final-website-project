@@ -19,14 +19,14 @@
                                 <h5 class="card-title">Price</h5>
                                 <p class="card-text">${{ item.price }}</p>
                                 <h5 class="card-title">Seller</h5>
-                                <p class="card-text {% if item.author == current_user %}highlight{% endif %}">{{ item.author.username }}</p>
+                                <p class="card-text {% if item.author == current_user %}highlight{% endif %}"><i class="fa-solid fa-user me-2"></i>{{ item.author.username }}</p>
                                 {% if admin or item.author == current_user %}
                                     <a href="{{ url_for('edit_product', item_id=item.id) }}" class="btn btn-primary btn-lg btn-block">Edit Product</a>
                                 {% else %}
                                     <form action="{{ url_for('buy_item', item_id=item.id) }}" method="POST" style="display: inline-block;">
                                         <input type="hidden" name="_method" value="POST">
-                                        <button type="submit" class="btn btn-success btn-lg btn-block">
-                                            Buy Now
+                                        <button type="submit" class="fw-bold btn btn-success btn-lg btn-block">
+                                            <i class="fa-solid fa-cart-shopping me-2"></i>Buy Now
                                         </button>
                                     </form>
                                 {% endif %}
