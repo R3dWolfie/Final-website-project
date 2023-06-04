@@ -34,7 +34,7 @@ app.config['MAIL_USE_SSL'] = False
 app.config['MAIL_USERNAME'] = 'fooferweb@gmail.com'
 app.config['MAIL_PASSWORD'] = 'izmqvomflkfhokgj'
 app.config['MAIL_DEFAULT_SENDER'] = 'fooferweb@gmail.com'
-socketio = SocketIO(app)
+socketio = SocketIO(app, cors_allowed_origins='*', async_handlers=True)
 
 mail = Mail(app)
 
@@ -281,7 +281,7 @@ def auto_login():
     username2 = "user"
     password2 = "qwerty123"
     new_user2 = User(username=username2, password=password2,
-                    email=email2, is_owner=False, is_admin=False)
+                     email=email2, is_owner=False, is_admin=False)
 
     db.session.add(new_user2)
 
@@ -704,16 +704,6 @@ def remove_admin():
     return redirect(url_for('admin_page'))
 
 
-@socketio.on('my event')
-def handle_my_custom_event(json, methods=['GET', 'POST']):
-    print('Recevied event: ' + str(json))
-    socketio.emit('Message', json, callback=messageReceived)
-
-
-def message_in(methords=["GET", "POST"]):
-    print("Received message!")
-
-
 @app.route('/admin/products')
 def manage_products():
     # Retrieve the list of products from the database
@@ -790,11 +780,32 @@ def sales_report():
     return response """
 
 
+@socketio.on('chat-event')
+def handle_my_custom_event(json, methods=['GET', 'POST']):
+    print('Recevied event: ' + str(json))
+    socketio.emit('response', json, callback=message_in)
+
+
+def message_in(methords=["GET", "POST"]):
+    print("Received message!")
+
+
 @app.route('/chat/<username>')
 def chat(username):
 
-    return render_template('chat.html', target_user=username)
+    user = User.query.filter_by(username=username).first()
+
+    return render_template('chat.html', target_user=user)
+
+
+@app.route('/items/<category>')
+def categories(category):
+
+    sales = Item.query.filter(
+        Item.category == category).all()
+
+    return render_template('items_categories.html', category=category, items=sales)
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    socketio.run(app, debug=True)

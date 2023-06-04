@@ -3,19 +3,12 @@
 {% block title %}Chat{% endblock %}
 
 {% block content %}
-<html>
-
-<head>
-    <title>Chat</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/chat.css') }}">
-    <script src="{{ url_for('static', filename='js/chat.js') }}"></script>
-</head>
 
 <body>
     <div class="app">
         <aside class="sidebar">
             <div class="sidebar-header">
-                <h2>Chats with <span class="text-primary">{{ target_user}}</span></h2>
+                <h2 class="fw-bold">Chats with <span class="text-primary">{{ target_user.username }}</span></h2>
             </div>
             <ul class="chat-list">
                 <!-- Chats dynamically populated here -->
@@ -29,14 +22,53 @@
                 <!-- Chat messages dynamically populated here -->
             </div>
             <div class="chat-input-area w-100 container-fluid">
+                <div class="message_holder container-fluid" style="height: 60vh;">
+
+                </div>
                 <form>
                     <div class="input-group">
-                        <input type="text" class="form-control" id="chat-input" placeholder="Type a message..."
-                            autocomplete="off">
+                        <input type="text" class="form-control message" id="chat-input" name="content"
+                            placeholder="Type a message..." autocomplete="off">
+                        <input type="hidden" class="form-control username" id="chat-input" value="{{ current_user.id }}"
+                            name="sender-id" autocomplete="off">
+                        <input type="hidden" class="form-control target_username" id="chat-input"
+                            value="{{ current_user.username }}" name="sender-id" autocomplete="off">
+                        <input type="hidden" class="form-control target_user" id="chat-input"
+                            value="{{ target_user.id }}" name="target-id" autocomplete="off">
                         <button id="send-btn" class="btn btn-primary fw-bold"><i
                                 class="fa-solid fa-paper-plane me-2"></i>Send</button>
                     </div>
                 </form>
+                <script>
+                    var socket = io.connect('http://' + document.domain + ':' + location.port);
+                    socket.on('connect', function () {
+                        socket.emit('chat-event', {
+                            data: 'User Connected'
+                        })
+                        var form = $('form').on('submit', function (e) {
+                            e.preventDefault()
+                            let user_name = $('input.username').val()
+                            let target_username = $('input.target_username').val()
+                            let user_input = $('input.message').val()
+                            let target_user = $('input.target_user').val()
+                            socket.emit('chat-event', {
+                                user_name: target_username,
+                                senderId: user_name,
+                                targetId: target_user,
+                                message: user_input
+                            })
+                            $('input.message').val('').focus()
+                        })
+                    })
+
+                    socket.on('response', function (msg) {
+                        console.log(msg)
+                        if (typeof msg.user_name !== 'undefined') {
+                            $('h3').remove()
+                            $('div.message_holder').append(`<div class="mb-2"><span class="rounded-3 px-2 me-2 bg-dark text-primary shadow">${msg.user_name}</span><b>${msg.message}</b></div>`)
+                        }
+                    })
+                </script>
             </div>
         </section>
     </div>

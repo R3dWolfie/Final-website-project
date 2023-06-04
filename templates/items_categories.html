@@ -1,0 +1,62 @@
+{% extends 'layout.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center mb-3 fw-bold"><span class="text-primary">#{{category}}</span> Products</h2>
+    <div class="row justify-content-center">
+        {% for item in items %}
+        {% if item.stock > 0 %}
+        <div class="col-md-4">
+            <div class="card mb-4 product-card">
+                <a href="{{ url_for('product_details', item_id=item.id) }}">
+                    <img src="{{ url_for('static', filename='pics/' + item.image_file) }}" alt="{{ item.name }}"
+                        class="card-img-top product-image w-100">
+                </a>
+                <div class="card-body">
+                    <h3 class="card-title text-center"><a class="text-light text-decoration-none"
+                            href="{{ url_for('product_details', item_id=item.id) }}">{{ item.name }}</a></h3>
+                    <p class="card-text">{{ item.description[:30] }}{% if item.description|length > 30 %}... <a
+                            href="{{ url_for('product_details', item_id=item.id) }}" class="btn btn-link">See more</a>{%
+                        endif %}</p>
+                    <p class="card-text">Price: ${{ item.price }}</p>
+                    <p class="card-text">In stock: {{ item.stock }}</p>
+                    <p class="card-text">
+                        <a href="/chat/{{ item.author.username }}"
+                            class="text-decoration-none {% if item.author == current_user: %} text-success {% else %} text-primary {% endif %}">
+                            <i class="fa-solid fa-user me-2"></i>{{ item.author.username }}
+                        </a>
+                    </p>
+                    <p class="card-text">
+                        <a href="/items/{{item.category}}" class="text-decoration-none text-warning">
+                            <i class="fa-solid fa-hashtag me-2"></i>{{ item.category }}
+                        </a>
+                    </p>
+                    <div class="text-center">
+                        {% if item.author != current_user %}
+                        <form action="{{ url_for('buy_item', item_id=item.id) }}" method="POST"
+                            style="display: inline-block;">
+                            <input type="hidden" name="_method" value="POST">
+                            <button type="submit"
+                                class="btn fw-bold btn-success{% if item.stock <= 0 %} disabled{% endif %}">
+                                {% if item.stock <= 0 %} Out of Stock {% else %} <i
+                                    class="fa-solid fa-cart-shopping me-2"></i>Buy Now
+                                    {% endif %}
+                            </button>
+                        </form>
+                        {% else %}
+                        <a href="{{ url_for('edit_product', item_id=item.id) }}"
+                            class="btn btn-outline-primary fw-bold">Edit product</a>
+                        {% endif %}
+                        <a href="{{ url_for('product_details', item_id=item.id) }}" class="btn btn-primary fw-bold"><i
+                                class="fa-solid fa-align-justify me-2"></i>View Details</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+{%endblock%}

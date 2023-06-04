@@ -10,7 +10,7 @@
                 <div class="card bg-dark text-light mb-3">
                     <div class="row g-0">
                         <div class="col-md-4">
-                            <img src="{{ url_for('static', filename='pics/'+item.image_file) }}" alt="{{ item.name }}" class="h-100 img-fluid rounded-start">
+                            <img src="{{ url_for('static', filename='pics/'+item.image_file) }}" alt="{{ item.name }}" style="object-fit: cover;" class="h-100 img-fluid rounded-start">
                         </div>
                         <div class="col-md-8">
                             <div class="card-body">
