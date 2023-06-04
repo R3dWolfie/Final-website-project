@@ -18,7 +18,7 @@ from werkzeug.utils import secure_filename
 from functools import wraps
 from errors.handlers import errors
 from collections import defaultdict
-
+from flask_socketio import SocketIO
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField
 from wtforms.validators import DataRequired, Email, EqualTo
 
@@ -33,6 +33,7 @@ app.config['MAIL_USE_SSL'] = False
 app.config['MAIL_USERNAME'] = 'fooferweb@gmail.com'
 app.config['MAIL_PASSWORD'] = 'izmqvomflkfhokgj'
 app.config['MAIL_DEFAULT_SENDER'] = 'fooferweb@gmail.com'
+socketio = SocketIO(app)
 
 mail = Mail(app)
 
@@ -49,17 +50,18 @@ migrate = Migrate(app, db)
 
 class Item(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
+    name = db.Column(db.String(512), nullable=False)
     description = db.Column(db.Text, nullable=False)
     price = db.Column(db.Float, nullable=False)
     stock = db.Column(db.Integer, nullable=False)
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    image_file = db.Column(db.String(200), nullable=False)
+    image_file = db.Column(db.String(512), nullable=False)
+    category = db.Column(db.String(512), nullable=False)
     sales = db.relationship('Sales', backref='item', lazy=True)  # One-to-many relationship with Sales
 
     @staticmethod
-    def create_item(name, description, price, image_file, author, stock=1):
-        item = Item(name=name, description=description, price=price, author=author, image_file=image_file, stock=stock)
+    def create_item(name, description, price, image_file, author, category, stock=1):
+        item = Item(name=name, description=description, price=price, author=author, image_file=image_file, stock=stock, category=category)
         db.session.add(item)
         db.session.commit()
         return item
@@ -190,7 +192,7 @@ class User(db.Model, UserMixin):
     is_owner = db.Column(db.Boolean, default=False)
     items = db.relationship('Item', backref='author', lazy=True)
     reset_token = db.Column(db.String(100), unique=True)
-
+    profile_picture = db.Column(db.Text, unique=True)
     news_articles = db.relationship('News', lazy=True)  # Added relationship backref
 
     def __init__(self, username, password, email):  # Updated constructor
@@ -353,6 +355,7 @@ def add_item():
         # Retrieve the item details from the form
         name = request.form['name']
         description = request.form['description']
+        category = request.form['category']
         price = float(request.form['price'])
         image_file = request.files['image_file']
         stock = int(request.form['stock'])
@@ -387,7 +390,7 @@ def add_item():
         # Create the new item in the database
         author = current_user  # Assuming you're using Flask-Login and the current user is logged in
         item = Item.create_item(name=name, description=description, price=price, image_file=saved_filename,
-                                author=author, stock=stock)
+                                author=author, stock=stock, category=category)
 
         # Redirect to the item details page
         return redirect(url_for('product_details', item_id=item.id))
@@ -446,7 +449,8 @@ def product_details(item_id):
 
     # Retrieve 3 random other products
     other_products = Item.query.filter(Item.id != item_id).all()
-    random_products = sample(other_products, 3)
+    
+    random_products = sample(other_products, 3 if len(other_products) >= 3 else len(other_products))
 
     return render_template('product_details.html', item=item, random_products=random_products)
 
@@ -468,6 +472,7 @@ def edit_product(item_id):
         item.description = request.form['description']
         item.price = float(request.form['price'])
         item.stock = int(request.form['stock'])
+        item.category = request.form['category']
 
         # Check if a new image file is uploaded
         if 'image' in request.files:
@@ -648,6 +653,13 @@ def remove_admin():
 
     return redirect(url_for('admin_page'))
 
+@socketio.on('my event')
+def handle_my_custom_event(json, methods=['GET', 'POST']):
+    print('Recevied event: ' + str(json))
+    socketio.emit('Message', json, callback=messageReceived)
+
+def message_in(methords=["GET", "POST"]):
+    print("Received message!")
 
 @app.route('/admin/products')
 def manage_products():

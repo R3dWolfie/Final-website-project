@@ -18,7 +18,7 @@
                         class="card-img-top product-image">
                 </a>
                 <div class="card-body">
-                    <h3 class="card-title text-center">{{ item.name }}</h3>
+                    <h3 class="card-title text-center"><a class="text-light text-decoration-none" href="{{ url_for('product_details', item_id=item.id) }}">{{ item.name }}</a></h3>
                     <p class="card-text">{{ item.description[:30] }}{% if item.description|length > 30 %}... <a
                             href="{{ url_for('product_details', item_id=item.id) }}" class="btn btn-link">See more</a>{%
                         endif %}</p>
@@ -28,6 +28,12 @@
                         class="card-text">
                         <a href="/chat/{{ item.author.username }}" class="text-decoration-none {% if item.author == current_user: %} text-success {% else %} text-primary {% endif %}">
                             <i class="fa-solid fa-user me-2"></i>{{ item.author.username }}
+                        </a>
+                    </p>
+                    <p
+                        class="card-text">
+                        <a href="/items/{{item.category}}" class="text-decoration-none text-warning">
+                            <i class="fa-solid fa-hashtag me-2"></i>{{ item.category }}
                         </a>
                     </p>
                     <div class="text-center">

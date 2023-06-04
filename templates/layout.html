@@ -17,6 +17,9 @@
         href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap"
         rel="stylesheet">
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.7.3/socket.io.min.js"></script>
+
     <script src="https://kit.fontawesome.com/3747385463.js" crossorigin="anonymous"></script>
 </head>
 
@@ -68,16 +71,20 @@
                     <ul class="navbar-nav ms-auto">
                         {% if current_user.is_authenticated %}
                         <li class="nav-item">
-                            <a href="{{ url_for('add_item') }}" class="btn btn-primary fw-bold text-light me-2"><i class="fa-solid fa-plus me-2"></i>Add Item</a>
+                            <a href="{{ url_for('add_item') }}" class="btn btn-primary fw-bold text-light me-2"><i
+                                    class="fa-solid fa-plus me-2"></i>Add Item</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url_for('profile') }}" class="nav-link text-light"><i class="fa-solid fa-user me-2"></i>Profile</a>
+                            <a href="{{ url_for('profile') }}" class="nav-link text-primary"><i
+                                    class="fa-solid fa-user me-2"></i>{{ current_user.username }}</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url_for('logout') }}" class="nav-link text-light"><i class="fa-solid fa-right-from-bracket me-2"></i>Logout</a>
+                            <a href="{{ url_for('logout') }}" class="nav-link text-light"><i
+                                    class="fa-solid fa-right-from-bracket me-2"></i>Logout</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url_for('news') }}" class="nav-link text-light"><i class="fa-solid fa-newspaper me-2"></i>News</a>
+                            <a href="{{ url_for('news') }}" class="nav-link text-light"><i
+                                    class="fa-solid fa-newspaper me-2"></i>News</a>
                         </li>
                         {% else %}
                         <li class="nav-item">
