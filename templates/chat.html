@@ -40,6 +40,8 @@
                     </div>
                 </form>
                 <script>
+                    let target_user = $('input.target_user').val()
+                    let user_name = $('input.username').val()
                     var socket = io.connect('http://' + document.domain + ':' + location.port);
                     socket.on('connect', function () {
                         socket.emit('chat-event', {
@@ -47,10 +49,8 @@
                         })
                         var form = $('form').on('submit', function (e) {
                             e.preventDefault()
-                            let user_name = $('input.username').val()
                             let target_username = $('input.target_username').val()
                             let user_input = $('input.message').val()
-                            let target_user = $('input.target_user').val()
                             socket.emit('chat-event', {
                                 user_name: target_username,
                                 senderId: user_name,
@@ -63,7 +63,7 @@
 
                     socket.on('response', function (msg) {
                         console.log(msg)
-                        if (typeof msg.user_name !== 'undefined') {
+                        if (typeof msg.user_name !== 'undefined' && (msg.targetId == user_name || msg.senderId == user_name)) {
                             $('h3').remove()
                             $('div.message_holder').append(`<div class="mb-2"><span class="rounded-3 px-2 me-2 bg-dark text-primary shadow">${msg.user_name}</span><b>${msg.message}</b></div>`)
                         }
