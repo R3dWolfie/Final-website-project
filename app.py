@@ -1,9 +1,14 @@
 import os
+import csv
+import tempfile
 import secrets
+from datetime import datetime
 from PIL import Image, ExifTags
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, send_file
 from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
+from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import func, extract
 from flask_wtf import FlaskForm
 from flask_mail import Mail, Message
 from flask_bcrypt import Bcrypt
@@ -12,7 +17,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from functools import wraps
 from errors.handlers import errors
-from sqlalchemy import func
+from collections import defaultdict
 
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, TextAreaField
 from wtforms.validators import DataRequired, Email, EqualTo
@@ -40,9 +45,8 @@ db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
+migrate = Migrate(app, db)
 
-
-# Define the Item model
 class Item(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
@@ -51,6 +55,7 @@ class Item(db.Model):
     stock = db.Column(db.Integer, nullable=False)
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     image_file = db.Column(db.String(200), nullable=False)
+    sales = db.relationship('Sales', backref='item', lazy=True)  # One-to-many relationship with Sales
 
     @staticmethod
     def create_item(name, description, price, image_file, author, stock=1):
@@ -58,6 +63,26 @@ class Item(db.Model):
         db.session.add(item)
         db.session.commit()
         return item
+
+
+class Sales(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    item_id = db.Column(db.Integer, db.ForeignKey('item.id'), nullable=False)
+    buyer_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # New field
+    sale_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    quantity = db.Column(db.Integer, nullable=False)
+    total_value = db.Column(db.Float, nullable=False)
+
+
+
+def make_sale(item_id, quantity, buyer_id):
+    item = Item.query.get(item_id)
+    if item and item.stock >= quantity:
+        sale = Sales(item_id=item_id, buyer_id=buyer_id, quantity=quantity, total_value=item.price * quantity)
+        db.session.add(sale)
+        item.stock -= quantity  # decrease stock by the quantity sold
+        db.session.commit()
+        return sale
 
 
 class News(db.Model):
@@ -376,8 +401,11 @@ def buy_item(item_id):
         flash('This item is currently out of stock.', 'danger')
         return redirect(url_for('product_details', item_id=item.id))
 
-    # Reduce the stock count by 1
+    # Reduce the stock count by 1 and record the sale
     item.stock -= 1
+    sale = Sales(item_id=item_id, buyer_id=current_user.id, quantity=1, total_value=item.price)
+    db.session.add(sale)
+
     db.session.commit()
 
     # Send email notification to the user
@@ -385,6 +413,8 @@ def buy_item(item_id):
 
     flash('Item purchased successfully!', 'success')
     return redirect(url_for('product_details', item_id=item.id))
+
+
 
 
 def resize_image(image_path, size):
@@ -414,8 +444,6 @@ def product_details(item_id):
 
     return render_template('product_details.html', item=item, random_products=random_products)
 
-
-# ...
 
 @app.route('/edit_product/<int:item_id>', methods=['GET', 'POST'])
 @login_required
@@ -621,6 +649,61 @@ def manage_products():
     products = Item.query.all()
 
     return render_template('manage_products.html', products=products)
+
+
+@app.route('/sales_report')
+@admin_required
+def sales_report():
+    # Retrieve the sales data from the database grouped by month
+    sales_data_monthly = db.session.query(
+        Item.author_id,
+        extract('month', Item.sale_date),
+        func.count(Item.id),
+        func.sum(Item.price)
+    ).group_by(Item.author_id, extract('month', Item.sale_date)).all()
+
+    # Retrieve the top-selling items per month
+    top_selling_items = db.session.query(
+        extract('month', Item.sale_date),
+        Item.name,
+        func.count(Item.id)
+    ).group_by(extract('month', Item.sale_date), Item.name).all()
+
+    # Prepare the data for the CSV file
+    data = []
+    monthly_sales = defaultdict(list)
+    for user_id, month, item_count, total_value in sales_data_monthly:
+        user = User.query.get(user_id)
+        username = user.username if user else "Unknown User"
+        monthly_sales[month].append([username, item_count, total_value])
+
+    # Write the top-selling items data
+    top_selling = defaultdict(list)
+    for month, item_name, count in top_selling_items:
+        top_selling[month].append([item_name, count])
+
+    # Create a temporary file to store the CSV data
+    with tempfile.NamedTemporaryFile(mode='w', delete=False) as file:
+        temp_file = file.name
+
+        # Write the data to the CSV file
+        writer = csv.writer(file)
+        writer.writerow(
+            ['Month', 'Username', 'Number of Items Sold', 'Total Value', 'Top Selling Item', 'Quantity Sold'])
+
+        for month in monthly_sales:
+            for row in monthly_sales[month]:
+                top_item = max(top_selling[month], key=lambda x: x[1]) if month in top_selling else ["N/A", "N/A"]
+                writer.writerow([month] + row + top_item)
+
+    # Send the file as a response to the user
+    response = send_file(temp_file, mimetype='text/csv', as_attachment=True)
+
+    # Set the Content-Disposition header to specify the attachment filename
+    filename = 'sales_report.csv'
+    response.headers['Content-Disposition'] = f'attachment; filename="{filename}"'
+
+    return response
 
 
 @app.route('/chat')

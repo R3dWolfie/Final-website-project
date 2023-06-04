@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+
+{% block title %}Categories{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="text-center">Categories</h1>
+        <div class="row justify-content-center">
+            <div class="card-group">
+                {% for category in categories %}
+                    <div class="col-md-4">
+                        <div class="card mb-4 category-card">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ category.name }}</h5>
+                                <p class="card-text">{{ category.description }}</p>
+                                <a href="{{ url_for('category_items', category_id=category.id) }}" class="btn btn-primary">View Items</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
