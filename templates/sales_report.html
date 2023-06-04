@@ -1,0 +1,60 @@
+{% extends 'layout.html' %}
+
+{% block title %}Sales Report{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <h2 class="text-light mb-3"><i class="fa-solid fa-chart-line me-2"></i>Sales Dashboard</h2>
+    <div class="container-fluid">
+        <div class="row mb-3">
+            <div class="col-6 col-md-4">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">${{total_sales}}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Total Quantity Sold</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{total_sold}} Items</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Total Sold Items</h6>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6 col-md-4">
+                <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">${{average_sales}}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Average Sale Value</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <table class="table table-dark table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Buyer</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Date Bought</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for sale in sales %}
+                    <tr>
+                        <th scope="row">{{sale.id}}</th>
+                        <td>{{sale.buyer.username}}</td>
+                        <td>{{sale.quantity}}</td>
+                        <td>{{sale.sale_date.strftime('%B %d, %Y %I:%M%p')}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

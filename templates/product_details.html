@@ -6,11 +6,11 @@
     <div class="container">
         <div class="row">
             <div class="col">
-                <h1 class="text-center mb-4">{{ item.name }}</h1>
+                <h1 class="text-center mb-4 text-light">{{ item.name }}</h1>
                 <div class="card bg-dark text-light mb-3">
                     <div class="row g-0">
                         <div class="col-md-4">
-                            <img src="{{ url_for('static', filename='pics/'+item.image_file) }}" alt="{{ item.name }}" class="img-fluid rounded-start">
+                            <img src="{{ url_for('static', filename='pics/'+item.image_file) }}" alt="{{ item.name }}" class="h-100 img-fluid rounded-start">
                         </div>
                         <div class="col-md-8">
                             <div class="card-body">
@@ -39,7 +39,7 @@
 
         <div class="row mt-5">
             <div class="col">
-                <h3>Other Products</h3>
+                <h3>Other <span class="text-primary">{{ item.category }}</span> Products</h3>
                 <div class="row">
                     {% for product in random_products %}
                     <div class="col-md-4">

@@ -1,3 +1,4 @@
+from random import sample
 import os
 import csv
 import tempfile
@@ -48,6 +49,7 @@ login_manager.login_view = 'login'
 login_manager.login_message_category = 'info'
 migrate = Migrate(app, db)
 
+
 class Item(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(512), nullable=False)
@@ -57,11 +59,14 @@ class Item(db.Model):
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     image_file = db.Column(db.String(512), nullable=False)
     category = db.Column(db.String(512), nullable=False)
-    sales = db.relationship('Sales', backref='item', lazy=True)  # One-to-many relationship with Sales
+    # One-to-many relationship with Sales
+    sales = db.relationship('Sales', backref='item', lazy=True)
+    sale_date = db.Column(db.DateTime, nullable=True, default=datetime.utcnow)
 
     @staticmethod
     def create_item(name, description, price, image_file, author, category, stock=1):
-        item = Item(name=name, description=description, price=price, author=author, image_file=image_file, stock=stock, category=category)
+        item = Item(name=name, description=description, price=price,
+                    author=author, image_file=image_file, stock=stock, category=category)
         db.session.add(item)
         db.session.commit()
         return item
@@ -70,17 +75,19 @@ class Item(db.Model):
 class Sales(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     item_id = db.Column(db.Integer, db.ForeignKey('item.id'), nullable=False)
-    buyer_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # New field
+    buyer_id = db.Column(db.Integer, db.ForeignKey(
+        'user.id'), nullable=False)  # New field
     sale_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     quantity = db.Column(db.Integer, nullable=False)
     total_value = db.Column(db.Float, nullable=False)
-
+    buyer = db.relationship('User', backref='sales')
 
 
 def make_sale(item_id, quantity, buyer_id):
     item = Item.query.get(item_id)
     if item and item.stock >= quantity:
-        sale = Sales(item_id=item_id, buyer_id=buyer_id, quantity=quantity, total_value=item.price * quantity)
+        sale = Sales(item_id=item_id, buyer_id=buyer_id,
+                     quantity=quantity, total_value=item.price * quantity)
         db.session.add(sale)
         item.stock -= quantity  # decrease stock by the quantity sold
         db.session.commit()
@@ -92,7 +99,8 @@ class News(db.Model):
     title = db.Column(db.String(100), nullable=False)
     content = db.Column(db.Text, nullable=False)
     author_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    author = db.relationship('User', backref='news_author', foreign_keys=[author_id])  # Changed the backref name
+    author = db.relationship('User', backref='news_author', foreign_keys=[
+                             author_id])  # Changed the backref name
 
     def __init__(self, title, content, author_id):
         self.title = title
@@ -115,7 +123,8 @@ class Chat(db.Model):
 def check_user(user):
     user = db.session.query(User)
     if user == "None":
-        new_user = User(username="DefaultUser", password="testing", email="email@gmail.com")
+        new_user = User(username="DefaultUser",
+                        password="testing", email="email@gmail.com")
         db.session.add(new_user)
         db.session.commit()
     return user
@@ -193,11 +202,15 @@ class User(db.Model, UserMixin):
     items = db.relationship('Item', backref='author', lazy=True)
     reset_token = db.Column(db.String(100), unique=True)
     profile_picture = db.Column(db.Text, unique=True)
-    news_articles = db.relationship('News', lazy=True)  # Added relationship backref
+    news_articles = db.relationship(
+        'News', lazy=True)  # Added relationship backref
 
-    def __init__(self, username, password, email):  # Updated constructor
+    def __init__(self, username, password, email, is_admin=False, is_owner=False):  # Updated constructor
         self.username = username
-        self.password_hash = generate_password_hash(password, method='pbkdf2', salt_length=8)
+        self.is_admin = is_admin
+        self.is_owner = is_owner
+        self.password_hash = generate_password_hash(
+            password, method='pbkdf2', salt_length=8)
         self.email = email  # Set the email field
 
     def check_password(self, password):
@@ -212,7 +225,8 @@ class User(db.Model, UserMixin):
     @staticmethod
     def verify_reset_token(token):
         try:
-            user_id = serializer.loads(token, max_age=3600)  # Token expires after 1 hour
+            # Token expires after 1 hour
+            user_id = serializer.loads(token, max_age=3600)
             return User.query.get(user_id)
         except ValueError:
             return None
@@ -225,7 +239,8 @@ class ForgotPasswordForm(FlaskForm):
 
 class ResetPasswordForm(FlaskForm):
     password = PasswordField('New Password', validators=[DataRequired()])
-    confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+    confirm_password = PasswordField('Confirm Password', validators=[
+                                     DataRequired(), EqualTo('password')])
     submit = SubmitField('Reset Password')
 
 
@@ -244,6 +259,39 @@ class LoginForm(FlaskForm):
 class AddNewsForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     content = TextAreaField('Content', validators=[DataRequired()])
+
+# im tired of registering again and again xD
+
+
+@app.route("/autologin")
+def auto_login():
+    email = "alizer@alizer.com"
+    username = "alizer"
+    password = "qwerty123"
+    new_user = User(username=username, password=password,
+                    email=email, is_owner=True, is_admin=True)
+
+    db.session.add(new_user)
+
+    send_user_created_email(email)
+
+    db.session.commit()
+
+    email2 = "user@alizer.com"
+    username2 = "user"
+    password2 = "qwerty123"
+    new_user2 = User(username=username2, password=password2,
+                    email=email2, is_owner=False, is_admin=False)
+
+    db.session.add(new_user2)
+
+    send_user_created_email(email2)
+
+    db.session.commit()
+
+    login_user(new_user)
+
+    return redirect("/")
 
 
 @app.route("/login", methods=['GET', 'POST'])
@@ -331,7 +379,8 @@ def reset_password(token):
     form = ResetPasswordForm()
     if form.validate_on_submit():
         password = form.password.data
-        hashed_password = generate_password_hash(password, method='pbkdf2', salt_length=8)
+        hashed_password = generate_password_hash(
+            password, method='pbkdf2', salt_length=8)
         user.password_hash = hashed_password
         user.reset_token = None
         db.session.commit()
@@ -384,11 +433,13 @@ def add_item():
             # Resize the image to 200x200 pixels
             resized_image = img.resize((200, 200))
             resized_filename = f"resized_{secrets.token_hex(12)}_{filename}"
-            resized_image_path = os.path.join(app.config['UPLOAD_FOLDER'], resized_filename)
+            resized_image_path = os.path.join(
+                app.config['UPLOAD_FOLDER'], resized_filename)
             resized_image.save(resized_image_path)
 
         # Create the new item in the database
-        author = current_user  # Assuming you're using Flask-Login and the current user is logged in
+        # Assuming you're using Flask-Login and the current user is logged in
+        author = current_user
         item = Item.create_item(name=name, description=description, price=price, image_file=saved_filename,
                                 author=author, stock=stock, category=category)
 
@@ -412,7 +463,8 @@ def buy_item(item_id):
 
     # Reduce the stock count by 1 and record the sale
     item.stock -= 1
-    sale = Sales(item_id=item_id, buyer_id=current_user.id, quantity=1, total_value=item.price)
+    sale = Sales(item_id=item_id, buyer_id=current_user.id,
+                 quantity=1, total_value=item.price)
     db.session.add(sale)
 
     db.session.commit()
@@ -422,8 +474,6 @@ def buy_item(item_id):
 
     flash('Item purchased successfully!', 'success')
     return redirect(url_for('product_details', item_id=item.id))
-
-
 
 
 def resize_image(image_path, size):
@@ -439,18 +489,17 @@ def products():
     return render_template('products.html', products=products)
 
 
-from random import sample
-
-
 @app.route('/product/<int:item_id>')
 def product_details(item_id):
     # Retrieve the item from the database by ID
     item = Item.query.get_or_404(item_id)
 
     # Retrieve 3 random other products
-    other_products = Item.query.filter(Item.id != item_id).all()
-    
-    random_products = sample(other_products, 3 if len(other_products) >= 3 else len(other_products))
+    other_products = Item.query.filter(
+        Item.id != item_id and Item.category == item.category).all()
+
+    random_products = sample(other_products, 3 if len(
+        other_products) >= 3 else len(other_products))
 
     return render_template('product_details.html', item=item, random_products=random_products)
 
@@ -480,7 +529,8 @@ def edit_product(item_id):
             if image_file.filename != '':
                 # Save the uploaded file
                 filename = secure_filename(image_file.filename)
-                image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                image_path = os.path.join(
+                    app.config['UPLOAD_FOLDER'], filename)
                 image_file.save(image_path)
                 item.image_file = filename
 
@@ -653,13 +703,16 @@ def remove_admin():
 
     return redirect(url_for('admin_page'))
 
+
 @socketio.on('my event')
 def handle_my_custom_event(json, methods=['GET', 'POST']):
     print('Recevied event: ' + str(json))
     socketio.emit('Message', json, callback=messageReceived)
 
+
 def message_in(methords=["GET", "POST"]):
     print("Received message!")
+
 
 @app.route('/admin/products')
 def manage_products():
@@ -680,6 +733,13 @@ def sales_report():
         func.sum(Item.price)
     ).group_by(Item.author_id, extract('month', Item.sale_date)).all()
 
+    sales = Sales.query.join(Item).filter(
+        Item.author_id == current_user.id).all()
+
+    total_sales = 0
+    for i in sales:
+        total_sales += i.total_value
+
     # Retrieve the top-selling items per month
     top_selling_items = db.session.query(
         extract('month', Item.sale_date),
@@ -687,15 +747,21 @@ def sales_report():
         func.count(Item.id)
     ).group_by(extract('month', Item.sale_date), Item.name).all()
 
+    average_sales = 0
+
+    if total_sales is not 0 and len(sales) is not 0:
+        average_sales = total_sales / len(sales)
     # Prepare the data for the CSV file
     data = []
     monthly_sales = defaultdict(list)
+
     for user_id, month, item_count, total_value in sales_data_monthly:
         user = User.query.get(user_id)
         username = user.username if user else "Unknown User"
         monthly_sales[month].append([username, item_count, total_value])
 
-    # Write the top-selling items data
+    return render_template("sales_report.html", sales=sales, total_sales=total_sales, total_sold=len(sales), average_sales=average_sales)
+    """ # Write the top-selling items data
     top_selling = defaultdict(list)
     for month, item_name, count in top_selling_items:
         top_selling[month].append([item_name, count])
@@ -721,7 +787,7 @@ def sales_report():
     filename = 'sales_report.csv'
     response.headers['Content-Disposition'] = f'attachment; filename="{filename}"'
 
-    return response
+    return response """
 
 
 @app.route('/chat/<username>')

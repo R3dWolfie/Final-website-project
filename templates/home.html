@@ -15,23 +15,23 @@
             <div class="card mb-4 product-card">
                 <a href="{{ url_for('product_details', item_id=item.id) }}">
                     <img src="{{ url_for('static', filename='pics/' + item.image_file) }}" alt="{{ item.name }}"
-                        class="card-img-top product-image">
+                        class="card-img-top product-image w-100">
                 </a>
                 <div class="card-body">
-                    <h3 class="card-title text-center"><a class="text-light text-decoration-none" href="{{ url_for('product_details', item_id=item.id) }}">{{ item.name }}</a></h3>
+                    <h3 class="card-title text-center"><a class="text-light text-decoration-none"
+                            href="{{ url_for('product_details', item_id=item.id) }}">{{ item.name }}</a></h3>
                     <p class="card-text">{{ item.description[:30] }}{% if item.description|length > 30 %}... <a
                             href="{{ url_for('product_details', item_id=item.id) }}" class="btn btn-link">See more</a>{%
                         endif %}</p>
                     <p class="card-text">Price: ${{ item.price }}</p>
                     <p class="card-text">In stock: {{ item.stock }}</p>
-                    <p
-                        class="card-text">
-                        <a href="/chat/{{ item.author.username }}" class="text-decoration-none {% if item.author == current_user: %} text-success {% else %} text-primary {% endif %}">
+                    <p class="card-text">
+                        <a href="/chat/{{ item.author.username }}"
+                            class="text-decoration-none {% if item.author == current_user: %} text-success {% else %} text-primary {% endif %}">
                             <i class="fa-solid fa-user me-2"></i>{{ item.author.username }}
                         </a>
                     </p>
-                    <p
-                        class="card-text">
+                    <p class="card-text">
                         <a href="/items/{{item.category}}" class="text-decoration-none text-warning">
                             <i class="fa-solid fa-hashtag me-2"></i>{{ item.category }}
                         </a>
@@ -62,10 +62,12 @@
         {% endfor %}
     </div>
 
-    <h2 class="text-center mt-5">Out of Stock</h2>
+    <h2 class="text-center mt-5">Out of
+        Stock</h2>
     <div class="row justify-content-center">
         {% for item in items %}
-        {% if item.stock <= 0 %} <div class="col-md-4">
+        {% if item.stock <= 0 %} 
+        <div class="col-md-4">
             <div class="card mb-4 product-card">
                 <a href="{{ url_for('product_details', item_id=item.id) }}">
                     <img src="{{ url_for('static', filename='pics/' + item.image_file) }}" alt="{{ item.name }}"
@@ -74,7 +76,8 @@
                 <div class="card-body">
                     <h3 class="card-title text-center">{{ item.name }}</h3>
                     <p class="card-text">{{ item.description[:30] }}{% if item.description|length > 30 %}... <a
-                            href="{{ url_for('product_details', item_id=item.id) }}" class="btn btn-link">See more</a>{%
+                            href="{{ url_for('product_details', item_id=item.id) }}" class="btn btn-link">See
+                            more</a>{%
                         endif %}</p>
                     <p class="card-text">Price: ${{ item.price }}</p>
                     <p class="card-text">In stock: {{ item.stock }}</p>
